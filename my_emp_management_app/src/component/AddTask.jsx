@@ -23,10 +23,10 @@ import axios from "axios";
             addAddress('');
             addPos('');
             addSalry('');
-            addExpr('')
-            addPhone('')
+            addExpr('');
+            addPhone('');
             addEmail('');
-            addEmpid('')
+            addEmpid('');
         })
         .catch(error=> console.log(error));
     }
@@ -73,9 +73,10 @@ import axios from "axios";
                     <label className="text-dark">Experience</label>
                     <input 
                         className="form-control"
-                        type="text"
+                        type="number"
                         value={experiance}
                         onChange={(e)=> addExpr(e.target.value)}
+                        
                     />
                 </div>
                 <div>
