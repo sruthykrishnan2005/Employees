@@ -3,17 +3,22 @@ import axios from "axios";
 
 const EmployeeList = () => {
     const [employees, setEmployees] = useState([]);
+    const [seremp, setSerEmp] = useState([]);
+    const [filteredemp, setFilteredEmp] = useState([]);
     const [editing, setEditing] = useState(false);
     const [currentEmployee, setCurrentEmployee] = useState({ id: null, name: '', address: '', position: '', salary: '', experiance: '', phone: '', email: '', empid: '' });
 
     useEffect(() => {
-        axios.get('https://aiswarya2325.pythonanywhere.com/employemanagement/employees/') 
-            .then(response => setEmployees(response.data))
+        axios.get('https://alan2325.pythonanywhere.com/employe/employees/') 
+            .then(response => {
+                setEmployees(response.data)
+                setFilteredEmp(response.data)
+            })
             .catch(error => console.log(error));
     }, []);
 
     const deleteEmployee = (id) => {
-        axios.delete(`https://aiswarya2325.pythonanywhere.com/employemanagement/employees/${id}/`) 
+        axios.delete(`https://alan2325.pythonanywhere.com/employe/employees/${id}/`) 
             .then(() => {
                 setEmployees(employees.filter(employee => employee.id !== id));
             })
@@ -27,16 +32,30 @@ const EmployeeList = () => {
 
     const updateEmployee = (id, updatedEmployee) => {
         setEditing(false);
-        axios.put(`https://aiswarya2325.pythonanywhere.com/employemanagement/employees/${id}/`, updatedEmployee) 
+        axios.put(`https://alan2325.pythonanywhere.com/employe/employees/${id}/`, updatedEmployee) 
             .then(response => {
                 setEmployees(employees.map(employee => (employee.id === id ? response.data : employee)));
             })
             .catch(error => console.log(error));
     }
 
+    useEffect(() => {
+        const result = employees.filter(emp => {
+            const searchTeam = seremp.toString();
+            return (
+                emp.name.includes(seremp) || 
+                emp.position.includes(seremp) ||
+                emp.empid.toString().includes(searchTeam)
+            );
+        });
+        setFilteredEmp(result);
+    }, [seremp, employees]);    
+
+    
     return (
         <div className="container mt-3">
             <h2>Employee List</h2>
+            <input type="text" placeholder="search"  value={seremp} onChange={(e)=>setSerEmp(e.target.value)} />
             <table className="table table-bordered table-hover">
                 <thead>
                     <tr>
@@ -52,7 +71,7 @@ const EmployeeList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {employees.map(employee => (
+                    {filteredemp.map(employee => (
                         <tr key={employee.id}>
                             <td>{employee.id}</td>
                             <td>{employee.name}</td>
